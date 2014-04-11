@@ -1,0 +1,47 @@
+<resources>
+
+    <string name="app_name">沈师掌上图书馆</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">沈师掌上图书馆</string>
+    <string name="title_activity_newbooks">新书通报</string>
+    <string name="title_activity_hotsearch">热门检索</string>
+    <string name="title_activity_ownlib">我的图书馆</string>
+    <string name="pre_page">上一页</string>
+    <string name="next_page">下一页</string>
+    
+    <string-array name="hot_books_strings">
+        <item >热门借阅</item>
+        <item >热门评价</item>
+        <item >热门收藏</item>
+        <item >热门浏览</item>
+    </string-array>
+    
+    <string-array name="categories_strings">
+        <item >A 马列主义.毛泽东思想.邓小平理论</item>
+		<item >B 哲学、宗教</item>
+		<item >C 社会科学总论</item>
+		<item >D 政治、法律</item>
+		<item >E 军事</item>
+		<item >F 经济</item>
+		<item >G 文化、科学、教育、体育</item>
+		<item >H 语言、文字</item>
+		<item >I 文学</item>
+		<item >J 艺术</item>
+		<item >K 历史、地理</item>
+		<item >N 自然科学总论</item>
+		<item >O 数理科学与化学</item>
+		<item >P 天文学、地球科学</item>
+		<item >Q 生物科学</item>
+		<item >R 医药、卫生</item>
+		<item >S 农业科学</item>
+		<item >T 工业技术</item>
+		<item >U 交通运输</item>
+		<item >V 航空、航天</item>
+		<item >X 环境科学,安全科学</item>
+		<item >Z 综合性图书</item>
+    </string-array>
+    
+    <string-array name="recommendation_strings"></string-array>
+
+</resources>

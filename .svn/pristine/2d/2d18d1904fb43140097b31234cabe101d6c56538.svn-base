@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="96dp"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:paddingLeft="10dip"
+    android:weightSum="10" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0px"
+        android:layout_height="96dp"
+        android:layout_weight="8"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp" />
+
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_recommendation_date"
+            android:layout_width="fill_parent"
+            android:layout_height="12dp"
+            android:text="2012-09-11"
+            android:textSize="10dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_recommendation_name"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:text="iOS APP程式設計活用寶典 for iPhone／iPad／iPod Touch"
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_recommendation_writer"
+            android:layout_width="fill_parent"
+            android:layout_height="14dp"
+            android:text="布留川 英一 著 許郁文 译"
+            android:textSize="11dip" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp" />
+
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_recommendation_extra"
+            android:layout_width="fill_parent"
+            android:layout_height="14dp"
+            android:text="電腦人 2012-04-17"
+            android:textSize="11dip" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0px"
+        android:layout_height="96dp"
+        android:layout_weight="2"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_recommendation_state"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="待处理"
+            android:textSize="11dip" />
+    </LinearLayout>
+
+</LinearLayout>

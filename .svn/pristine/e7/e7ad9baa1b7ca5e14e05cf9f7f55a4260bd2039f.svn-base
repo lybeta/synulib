@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="82dp"
+    android:orientation="vertical" 
+    android:paddingLeft="10dip" >
+    <TextView
+        android:id="@+id/tv_list_item_hotsearchdetail_name"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:textSize="20dip" 
+        android:text="39.Java EE实用教程:基于WebLogic和Eclipse.第2版">
+        
+    </TextView>
+    <TextView 
+            android:id="@+id/tv_list_item_hotsearchdetail_writer"
+            android:layout_width="fill_parent"
+            android:layout_height="14dp"
+            android:textSize="11dip"
+            android:text="李绪成主编 电子工业出版社 2011"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"/>
+
+    <LinearLayout
+        android:layout_height="14dp"
+        android:layout_width="fill_parent"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/tv_list_item_hotsearchdetail_number"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="TP312JA/501"
+            android:textSize="11dip" />
+
+
+        <TextView
+            android:id="@+id/tv_list_item_hotsearchdetail_holding"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="馆藏复本：2 可借复本：2"
+            android:textSize="11dip" />
+        
+    </LinearLayout>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"/>
+    <TextView
+        android:id="@+id/tv_list_item_hotsearchdetail_url"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"/>
+
+</LinearLayout>

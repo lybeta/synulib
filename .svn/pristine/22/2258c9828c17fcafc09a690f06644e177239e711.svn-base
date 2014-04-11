@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="84dp"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:paddingLeft="10dip"
+    android:weightSum="10" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0px"
+        android:layout_height="84dp"
+        android:layout_weight="8"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp" />
+
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_shelf_name"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:text="java"
+            android:textSize="20dip" >
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="14dp" 
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tv_list_item_ownlib_shelf_count"
+                android:layout_height="fill_parent"
+                android:layout_width="0px"
+                android:layout_weight="1"
+                android:text="数目数：12"
+                android:textSize="11dip" />
+
+            <TextView
+                android:id="@+id/tv_list_item_ownlib_shelf_date"
+                android:layout_height="fill_parent"
+                android:layout_width="0px"
+                android:layout_weight="1"
+                android:text="创建日期：2012-10-02"
+                android:textSize="11dip" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp" />
+
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_shelf_remark"
+            android:layout_width="fill_parent"
+            android:layout_height="14dp"
+            android:text="备注：asgvsdvgas"
+            android:textSize="11dip" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp" />
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_shelf_url"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:textSize="11dip" />
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_shelf_deleteurl"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:textSize="11dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0px"
+        android:layout_height="84dp"
+        android:layout_weight="2"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_recommendation_delete"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="删除"
+            android:textSize="11dip" />
+    </LinearLayout>
+
+</LinearLayout>

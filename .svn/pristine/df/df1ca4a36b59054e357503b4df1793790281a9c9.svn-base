@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:baselineAligned="false"
+    android:layout_width="fill_parent"
+    android:layout_height="96dp"
+    android:orientation="horizontal"
+    android:paddingLeft="10dip" 
+    android:weightSum="10">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="8"
+        android:layout_height="96dp"
+        android:layout_width="0px"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp" />
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_pay_number"
+            android:layout_width="fill_parent"
+            android:layout_height="12dp"
+            android:text="204410377"
+            android:textSize="10dip" >
+        </TextView>
+        <TextView
+            android:id="@+id/tv_list_item_ownlib_pay_name"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:text="空间设计随想:第五街装饰空间设计出品"
+            android:textSize="20dip" >
+        </TextView>
+
+         <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="14dp" 
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tv_list_item_ownlib_pay_date1"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="借阅日期：2012-09-12"
+                android:textSize="11dip" />
+
+            <TextView
+                android:id="@+id/tv_list_item_ownlib_pay_date2"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="应还日期：2012-10-13"
+                android:textSize="11dip" />
+        </LinearLayout>
+         
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp" />
+		<LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="14dp" 
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tv_list_item_ownlib_pay_pay1"
+                android:layout_height="fill_parent"
+                android:layout_width="0px"
+                android:layout_weight="1"
+                android:text="应缴：000"
+                android:textSize="11dip" />
+
+            <TextView
+                android:id="@+id/tv_list_item_ownlib_pay_pay2"
+                android:layout_height="fill_parent"
+                android:layout_width="0px"
+                android:layout_weight="1"
+                android:text="实缴：999"
+                android:textSize="11dip" />
+        </LinearLayout>
+       
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="2"
+        android:layout_height="96dp"
+        android:layout_width="0px"
+        android:orientation="vertical" >
+        <TextView
+                android:id="@+id/tv_list_item_ownlib_pay_state"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:text="续借"
+                android:textSize="11dip" />
+    </LinearLayout>
+
+</LinearLayout>

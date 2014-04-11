@@ -1,0 +1,167 @@
+package cn.skyliuyang.synulib;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+
+public class LoginActivity extends SherlockActivity {
+
+	private EditText et_login_user;
+	private EditText et_login_password;
+	private Button btn_login;
+	private String user = null;
+	private String password = null;
+	private SharedPreferences sharedPre = null;
+	private SharedPreferences.Editor editor = null;
+	private String html = null;
+	private String loginState = null;
+	private ProgressDialog dialog;
+	private static final int MSG_LOGIN_SUCCESS = 1;
+	private static final int MSG_LOGIN_FAIL = 2;
+
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.view_login);
+
+		et_login_user = (EditText) findViewById(R.id.et_login_user);
+		et_login_password = (EditText) findViewById(R.id.et_login_password);
+		btn_login = (Button) findViewById(R.id.btn_login);
+		sharedPre = getSharedPreferences("lib", Activity.MODE_PRIVATE);
+		editor = sharedPre.edit();
+
+		user = sharedPre.getString("user", "");
+		password = sharedPre.getString("password", "");
+		if ("" != user) {
+			et_login_user.setText(user);
+			et_login_password.setText(password);
+		}
+
+		dialog = new ProgressDialog(this);
+		dialog.setMessage("(*^__^*) µÇÂ½ÖÐ¡­¡­");
+		dialog.setCancelable(false);
+
+		btn_login.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				user = et_login_user.getText().toString();
+				password = et_login_password.getText().toString();
+				if("".equals(user)|"".equals(password)){
+					Toast.makeText(getApplicationContext(), "o(¦á¦ä¦á)o Ç×£¬²»ÄÜÁô¿Õ°¡...",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				dialog.show();
+				new Thread() {
+					public void run() {
+						try {
+							loginState = login(user, password);
+							if ("×¢Ïú".equals(loginState)) {
+								mHandler.sendEmptyMessage(MSG_LOGIN_SUCCESS);
+							} else {
+								mHandler.sendEmptyMessage(MSG_LOGIN_FAIL);
+							}
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ClientProtocolException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}.start();
+
+			}
+		});
+	}
+
+	private String login(String user, String password) throws ParseException,
+			IOException, ClientProtocolException, IOException {
+
+		HttpClient httpClient = new DefaultHttpClient();
+
+		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+		formparams.add(new BasicNameValuePair("number", user));
+		formparams.add(new BasicNameValuePair("passwd", password));
+		formparams.add(new BasicNameValuePair("returnUrl", ""));
+		formparams.add(new BasicNameValuePair("select", "cert_no"));
+		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams,
+				"UTF-8");
+		try {
+			HttpPost post = new HttpPost(
+					"http://58.154.49.3:8080/reader/redr_verify.php");
+			post.setEntity(entity);
+			HttpContext localContext = new BasicHttpContext();
+			HttpResponse response = httpClient.execute(post, localContext);
+			html = EntityUtils.toString(response.getEntity(), "UTF-8");
+			post.abort();
+		} finally {
+			httpClient.getConnectionManager().shutdown();
+		}
+
+		Document doc = Jsoup.parse(html);
+		Element e = doc.select("#menu").first();
+		return e.child(1).child(1).text();
+	}
+
+	Handler mHandler = new Handler() {
+
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			switch (msg.what) {
+			case MSG_LOGIN_SUCCESS:
+				dialog.dismiss();
+				Toast.makeText(getApplicationContext(), "O(¡É_¡É)O~µÇÂ½³É¹¦£¡",
+						Toast.LENGTH_SHORT).show();
+				editor.putString("user", user);
+				editor.putString("password", password);
+				editor.commit();
+				finish();
+				break;
+			case MSG_LOGIN_FAIL:
+				dialog.dismiss();
+				Toast.makeText(getApplicationContext(), "(¨s©n¨t£©µÇÂ½Ê§°Ü",
+						Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+
+}

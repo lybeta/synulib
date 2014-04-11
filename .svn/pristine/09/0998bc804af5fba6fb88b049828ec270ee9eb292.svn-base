@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="240dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:padding="10dip">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25dip"
+        android:text="253图书馆" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="10dp" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="沈阳师范大学图书馆掌上客户端。集查询、预约、续借、扫描等多功能于一身。校内Android用户的最佳选择" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="10dp" />
+     <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Sky工作室  版权所有" />
+
+</LinearLayout>

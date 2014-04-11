@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="43dp"
+    android:orientation="vertical" 
+    android:paddingLeft="10dip" >
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"/>
+	<LinearLayout
+        android:layout_height="13dp"
+        android:layout_width="fill_parent"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/tv_list_item_bookdetail_number1"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="索书号：I247.57/3638"
+            android:textSize="11dip" />
+
+        <TextView 
+            android:id="@+id/tv_list_item_bookdetail_place1"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textSize="11dip"
+            android:text="总馆"/>
+
+        
+    </LinearLayout>
+    <LinearLayout
+        android:layout_height="13dp"
+        android:layout_width="fill_parent"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/tv_list_item_bookdetail_number2"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="条码号 ：206142424"
+            android:textSize="11dip" />
+
+        <TextView 
+            android:id="@+id/tv_list_item_bookdetail_place2"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textSize="11dip"
+            android:text="图书借阅二室 "/>
+
+        
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_list_item_bookdetail_state"
+        android:layout_width="fill_parent"
+        android:layout_height="13dp"
+        android:textSize="11dip" 
+        android:textColor="#33B5E5"
+        android:text="借出-应还日期：2012-10-25">
+        
+    </TextView>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"/>
+
+</LinearLayout>

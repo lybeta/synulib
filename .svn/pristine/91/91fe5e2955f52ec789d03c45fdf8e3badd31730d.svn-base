@@ -1,0 +1,561 @@
+/*
+ * Copyright (C) 2011 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package cn.skyliuyang.synulib;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.ParseException;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
+
+public class MainActivity extends SherlockFragmentActivity implements
+		ActionBar.TabListener {
+	private SharedPreferences sharedPre = null;
+	private SharedPreferences.Editor editor = null;
+	private static final int NUM_ITEMS = 4;
+	private ActionBar ab;
+	private MyAdapter adapter;
+	private ViewPager pager;
+	private static Context context;
+
+	private static final int MSG_DISMISS_PROGRESS_DIALOG = 17;
+	private static final int MSG_UPDATE_ANNOUNCEMENTS_LIST = 18;
+	private static final int MSG_UPDATE_HOTSEARCH_LIST = 19;
+	private static final int MSG_UPDATE_HOTBOOKS_LIST = 20;
+	private static final int MSG_UPDATE_CATEGORIES_LIST = 21;
+	private static final int REQUEST_CODE_OF_BARCODESEARCH = 22;
+
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		SubMenu subMenu = menu.addSubMenu("Overflow Item");
+		subMenu.add(1, 1, 1, "我的图书馆");
+		subMenu.add(1, 2, 2, "条码扫描快速续借");
+		subMenu.add(1, 3, 3, "反馈信息");
+		subMenu.add(1, 4, 4, "关于253图书馆");
+
+		sharedPre = getSharedPreferences("lib", Activity.MODE_PRIVATE);
+		String user = sharedPre.getString("user", "");
+		if (user != "") {
+			subMenu.add(1, 5, 5, "注销登陆并退出");
+		}else{
+			subMenu.add(1, 6, 5, "退出");
+		}
+
+		MenuItem subMenuItem = subMenu.getItem();
+		subMenuItem
+				.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_light);
+		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+				| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	protected void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.fragment_pager);
+		adapter = new MyAdapter(getSupportFragmentManager());
+		pager = (ViewPager) findViewById(R.id.pager);
+		pager.setAdapter(adapter);
+		pager.setOnPageChangeListener(new OnPageChangeListener() {
+
+			public void onPageSelected(int arg0) {
+				Log.d("k", "onPageSelected - " + arg0);
+				// activity从1到2滑动，2被加载后掉用此方法
+				ab.setSelectedNavigationItem(arg0);
+			}
+
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				Log.d("k", "onPageScrolled - " + arg0);
+				// 从1到2滑动，在1滑动前调用
+			}
+
+			public void onPageScrollStateChanged(int arg0) {
+				Log.d("k", "onPageScrollStateChanged - " + arg0);
+				// 状态有三个0空闲，1是增在滑行中，2目标加载完毕
+				/**
+				 * Indicates that the pager is in an idle, settled state. The
+				 * current page is fully in view and no animation is in
+				 * progress.
+				 */
+				// public static final int SCROLL_STATE_IDLE = 0;
+				/**
+				 * Indicates that the pager is currently being dragged by the
+				 * user.
+				 */
+				// public static final int SCROLL_STATE_DRAGGING = 1;
+				/**
+				 * Indicates that the pager is in the process of settling to a
+				 * final position.
+				 */
+				// public static final int SCROLL_STATE_SETTLING = 2;
+
+			}
+		});
+
+		context = this;
+
+		ab = getSupportActionBar();
+		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		for (int i = 1; i <= 4; i++) {
+			ActionBar.Tab tab = ab.newTab();
+			if (1 == i) {
+				tab.setText("主页");
+			} else if (2 == i) {
+				tab.setText("书目检索");
+			} else if (3 == i) {
+				tab.setText("热门图书");
+			} else if (4 == i) {
+				tab.setText("新书通报");
+			}
+			tab.setTabListener(this);
+			ab.addTab(tab);
+		}
+
+	}
+
+	public static class MyAdapter extends FragmentPagerAdapter {
+		public MyAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		public int getCount() {
+			return NUM_ITEMS;
+		}
+
+		public Fragment getItem(int position) {
+			return ArrayListFragment.newInstance(position);
+		}
+	}
+
+	public static class ArrayListFragment extends SherlockListFragment {
+		int mNum;
+
+		private SimpleAdapter itemsAdapter;
+		private ProgressDialog dialog;
+		private List<Map<String, String>> announcementsList = null;
+		private List<Map<String, String>> hotSearchList = null;
+		private List<Map<String, String>> hotBooksList = null;
+		private List<Map<String, String>> categoriesList = null;
+		private ObtainAnnouncementsThread obtainAnnouncementsThread = null;
+		private ObtainHotSearchThread obtainHotSearchThread = null;
+		private ObtainHotBooksThread obtainHotBooksThread = null;
+		private ObtainCategoriesThread obtainCategoriesThread = null;
+		private boolean flag = true;
+		EditText et_search_keyword;
+		Button btn_search;
+		Button btn_barcode_search;
+
+		/**
+		 * Create a new instance of CountingFragment, providing "num" as an
+		 * argument.
+		 */
+		static ArrayListFragment newInstance(int num) {
+			ArrayListFragment f = new ArrayListFragment();
+
+			// Supply num input as an argument.
+			Bundle args = new Bundle();
+			args.putInt("num", num);
+			f.setArguments(args);
+
+			return f;
+		}
+
+		/**
+		 * When creating, retrieve this instance's number from its arguments.
+		 */
+
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+
+		}
+
+		/**
+		 * The Fragment's UI is just a simple text view showing its instance
+		 * number.
+		 */
+
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			LinearLayout mLinearLayout = null;
+			if (0 == mNum) {
+				mLinearLayout = (LinearLayout) inflater.inflate(
+						R.layout.view1_index, container, false);
+			} else if (1 == mNum) {
+				mLinearLayout = (LinearLayout) inflater.inflate(
+						R.layout.view2_search, container, false);
+
+				et_search_keyword = (EditText) mLinearLayout
+						.findViewById(R.id.et_search_keyword);
+				btn_search = (Button) mLinearLayout
+						.findViewById(R.id.btn_search);
+				btn_barcode_search = (Button) mLinearLayout
+						.findViewById(R.id.btn_barcode_search);
+
+				btn_search.setOnClickListener(new OnClickListener() {
+
+					public void onClick(View v) {
+						Intent intent = new Intent();
+						intent.putExtra(
+								"url",
+								"http://58.154.49.3:8080/opac/openlink.php?historyCount=0&strText="
+										+ et_search_keyword.getText()
+												.toString()
+												.replaceAll(" ", "+")
+										+ "&doctype=ALL&strSearchType=title&match_flag=forward&displaypg=20&sort=CATA_DATE&orderby=desc&showmode=list&dept=ALL");
+						intent.setClass(context, HotSearchActivity.class);
+						startActivity(intent);
+					}
+
+				});
+				btn_barcode_search.setOnClickListener(new OnClickListener() {
+
+					public void onClick(View v) {
+						Intent intent = new Intent();
+						intent.setClass(context, CameraTestActivity.class);
+						startActivityForResult(intent, REQUEST_CODE_OF_BARCODESEARCH);
+					}
+				});
+			} else if (2 == mNum) {
+				mLinearLayout = (LinearLayout) inflater.inflate(
+						R.layout.view3_hot, container, false);
+			} else if (3 == mNum) {
+				mLinearLayout = (LinearLayout) inflater.inflate(
+						R.layout.view4_classified, container, false);
+			}
+
+			return mLinearLayout;
+		}
+
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+
+			// 设置正在处理窗口
+			dialog = new ProgressDialog(context);
+			dialog.setMessage("~~o(>_<)o ~~努力加载中...");
+			dialog.setCancelable(false);
+			if (0 == mNum) {
+//				 dialog.show();
+				// 开始动态加载公告线程
+				if (obtainAnnouncementsThread == null) {
+					obtainAnnouncementsThread = new ObtainAnnouncementsThread();
+					flag = true;
+					obtainAnnouncementsThread.start();
+					obtainAnnouncementsThread.interrupt();
+					obtainAnnouncementsThread = null;
+				}
+			} else if (1 == mNum) {
+//				 dialog.show();
+				// 开始动态加载热门搜索线程
+				if (obtainHotSearchThread == null) {
+					obtainHotSearchThread = new ObtainHotSearchThread();
+					flag = true;
+					obtainHotSearchThread.start();
+					obtainHotSearchThread.interrupt();
+					obtainHotSearchThread = null;
+				}
+			} else if (2 == mNum) {
+				// 开始动态加载热门借阅线程
+				if (obtainHotBooksThread == null) {
+					obtainHotBooksThread = new ObtainHotBooksThread();
+					flag = true;
+					obtainHotBooksThread.start();
+					obtainHotBooksThread.interrupt();
+					obtainHotBooksThread = null;
+				}
+			} else if (3 == mNum) {
+				// 开始动态加载分类目录线程
+				if (obtainCategoriesThread == null) {
+					obtainCategoriesThread = new ObtainCategoriesThread();
+					flag = true;
+					obtainCategoriesThread.start();
+					obtainCategoriesThread.interrupt();
+					obtainCategoriesThread = null;
+				}
+			}
+
+		}
+
+		Handler handler = new Handler() {
+
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				switch (msg.what) {
+				case MSG_UPDATE_ANNOUNCEMENTS_LIST:
+					itemsAdapter = new SimpleAdapter(getActivity(),
+							announcementsList,
+							R.layout.list_item_announcement, new String[] {
+									"name", "url" }, new int[] {
+									R.id.tv_list_item_announcement_name,
+									R.id.tv_list_item_announcement_url });
+					setListAdapter(itemsAdapter);
+					break;
+				case MSG_UPDATE_HOTSEARCH_LIST:
+					itemsAdapter = new SimpleAdapter(getActivity(),
+							hotSearchList, R.layout.list_item_hotsearch,
+							new String[] { "name", "url" }, new int[] {
+									R.id.tv_list_item_hotsearch_name,
+									R.id.tv_list_item_hotsearch_url });
+					setListAdapter(itemsAdapter);
+					break;
+				case MSG_UPDATE_HOTBOOKS_LIST:
+					itemsAdapter = new SimpleAdapter(getActivity(),
+							hotBooksList, R.layout.list_item_h_n_r,
+							new String[] { "name" },
+							new int[] { R.id.tv_list_item_h_n_r_name });
+					setListAdapter(itemsAdapter);
+					break;
+				case MSG_UPDATE_CATEGORIES_LIST:
+					itemsAdapter = new SimpleAdapter(getActivity(),
+							categoriesList, R.layout.list_item_h_n_r,
+							new String[] { "name" },
+							new int[] { R.id.tv_list_item_h_n_r_name });
+					setListAdapter(itemsAdapter);
+					break;
+
+				case MSG_DISMISS_PROGRESS_DIALOG:
+					// 关闭正在处理窗口
+					dialog.dismiss();
+					break;
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+
+		class ObtainAnnouncementsThread extends Thread {
+
+			public void run() {
+				while (flag) {
+
+					// 逐项添加程序，并发送消息更新ListView列表。
+					try {
+						announcementsList = new AnnouncementLoader().load();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}// 下载数据（耗时的操作）
+
+					handler.sendEmptyMessage(MSG_UPDATE_ANNOUNCEMENTS_LIST);
+					handler.sendEmptyMessage(MSG_DISMISS_PROGRESS_DIALOG);
+
+					flag = false;
+				}
+			}
+		}
+
+		class ObtainHotSearchThread extends Thread {
+
+			public void run() {
+				while (flag) {
+
+					// 逐项添加程序，并发送消息更新ListView列表。
+					try {
+						hotSearchList = new HotSearchLoader().load();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}// 下载数据（耗时的操作）
+
+					handler.sendEmptyMessage(MSG_UPDATE_HOTSEARCH_LIST);
+					handler.sendEmptyMessage(MSG_DISMISS_PROGRESS_DIALOG);
+
+					flag = false;
+				}
+			}
+		}
+
+		class ObtainHotBooksThread extends Thread {
+
+			public void run() {
+				while (flag) {
+					hotBooksList = new StringArrayLoader().loadHotBooks();
+					handler.sendEmptyMessage(MSG_UPDATE_HOTBOOKS_LIST);
+
+					flag = false;
+				}
+			}
+		}
+
+		class ObtainCategoriesThread extends Thread {
+
+			public void run() {
+				while (flag) {
+					categoriesList = new StringArrayLoader().loadCategories();
+					handler.sendEmptyMessage(MSG_UPDATE_CATEGORIES_LIST);
+
+					flag = false;
+				}
+			}
+		}
+		
+		
+
+		@Override
+		public void onListItemClick(ListView l, View v, int position, long id) {
+			// TODO Auto-generated method stub
+			super.onListItemClick(l, v, position, id);
+			if (0 == mNum) {
+
+			} else if (1 == mNum) {
+				@SuppressWarnings("unchecked")
+				HashMap<String, String> map = (HashMap<String, String>) l
+						.getItemAtPosition(position);
+				Intent intent = new Intent();
+				intent.putExtra("url",
+						"http://58.154.49.3:8080/opac/" + map.get("url"));
+				intent.setClass(context, HotSearchActivity.class);
+				startActivity(intent);
+			} else if (2 == mNum) {
+				Intent intent = new Intent();
+				intent.putExtra("hotbooksnum", String.valueOf(position));
+				intent.setClass(context, HotBooksActivity.class);
+				startActivity(intent);
+			} else if (3 == mNum) {
+				Intent intent = new Intent();
+				intent.putExtra("urlnum", String.valueOf(position));
+				intent.setClass(context, NewBooksActivity.class);
+				startActivity(intent);
+			}
+
+		}
+
+		@Override
+		public void onActivityResult(int requestCode, int resultCode,
+				Intent data) {
+			super.onActivityResult(requestCode, resultCode, data);
+			switch(requestCode){
+			case REQUEST_CODE_OF_BARCODESEARCH:
+				// 返回的条形码数据
+				String code = data.getStringExtra("Code");
+				if (code.equals("") | code.equals(null)) {
+					Toast.makeText(context, "╮(╯_╰)╭ 亲，条码没扫描到啊！",
+							Toast.LENGTH_SHORT).show();
+				} else {
+					Intent intent = new Intent();
+					intent.putExtra(
+							"url",
+							"http://58.154.49.3:8080/opac/openlink.php?title=&publisher=&author=&isbn="
+									+ code
+									+ "&series=&callno=&keyword=&year=&doctype=ALL&lang_code=ALL&displaypg=20&sort=CATA_DATE&orderby=desc&showmode=list&dept=ALL");
+					intent.setClass(context, HotSearchActivity.class);
+					startActivity(intent);
+				}
+				break;
+			}
+		}
+	}
+
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		pager.setCurrentItem(tab.getPosition());
+	}
+
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = new Intent();
+		switch (item.getItemId()) {
+		case 1:
+			intent.setClass(context, OwnLibActivity.class);
+			startActivity(intent);
+			break;
+		case 2:
+			intent = new Intent();
+			intent.setClass(context, QuickRenewActivity.class);
+			startActivity(intent);
+			break;
+		case 3:
+			intent = new Intent();
+			intent.setClass(context, FeedbackActivity.class);
+			startActivity(intent);
+			break;
+		case 4:
+			intent = new Intent();
+			intent.setClass(context, AboutActivity.class);
+			startActivity(intent);
+			break;
+		case 5:
+			editor = sharedPre.edit();
+			editor.putString("user", "");
+			editor.putString("password", "");
+			editor.commit();
+			finish();
+			break;
+		case 6:
+			finish();
+			break;
+		default:
+			break;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+}

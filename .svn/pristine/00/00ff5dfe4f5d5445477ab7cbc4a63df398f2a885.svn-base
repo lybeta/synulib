@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:orientation="vertical" 
+    android:paddingLeft="10dip" >
+    <TextView
+        android:id="@+id/tv_list_item_hotbooksfour_name"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:textSize="20dip" 
+        android:text="这是一本书的书名这是一本书的书名这是一本书的书名这是一本书的书名这是一本书的书名">
+        
+    </TextView>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="4dp"/>
+
+    <LinearLayout
+        android:layout_height="14dp"
+        android:layout_width="fill_parent"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/tv_list_item_hotbooksfour_writer"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="当年明月著"
+            android:textSize="11dip" />
+
+        <TextView 
+            android:id="@+id/tv_list_item_hotbooksfour_number"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textSize="11dip"
+            android:text="索书号：A41/2"/>
+
+
+        <TextView
+            android:id="@+id/tv_list_item_hotbooksfour_times"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="次数：999"
+            android:textSize="11dip" />
+        
+    </LinearLayout>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"/>
+
+</LinearLayout>

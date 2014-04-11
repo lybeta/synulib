@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:orientation="vertical" 
+    android:paddingLeft="10dip" >
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"/>
+    <TextView
+        android:id="@+id/tv_list_item_newbooks_name"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:textSize="20dip" 
+        android:text="这是一本书的书名这是一本书的书名这是一本书的书名这是一本书的书名这是一本书的书名">
+        
+    </TextView>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="4dp"/>
+    <TextView
+        android:id="@+id/tv_list_item_newbooks_writer"
+        android:layout_width="fill_parent"
+        android:layout_height="14dp"
+        android:textSize="11dip" 
+        android:text="这是一本书的书名这是一本书的书名这是一本书的书名这是一本书的书名这是一本书的书名">
+        
+    </TextView>
+    <TextView
+        android:id="@+id/tv_list_item_newbooks_url"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp" >
+        
+    </TextView>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"/>
+
+</LinearLayout>
